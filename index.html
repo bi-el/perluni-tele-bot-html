@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulir Permohonan Dokumen</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- 1. HUBUNGKAN SDK TELEGRAM WEB APP DI SINI -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <style>
+    /* Mengikuti tema Telegram user (Dark/Light Mode otomatis) */
+    body {
+      background-color: var(--tg-theme-bg-color, #f9fafb);
+      color: var(--tg-theme-text-color, #111827);
+    }
+  </style>
+</head>
+<body class="min-h-screen p-4 md:p-6 flex items-center justify-center">
+
+  <div class="w-full max-w-lg bg-white rounded-2xl shadow-xl p-6 space-y-4 border border-gray-100">
+    <div class="border-b pb-3 mb-2">
+      <h2 class="text-xl font-bold text-gray-800">Formulir Permohonan Dokumen</h2>
+      <p class="text-xs text-gray-500">Isi data di bawah ini untuk mengajukan permohonan dokumen.</p>
+    </div>
+
+    <form id="docForm" class="space-y-4">
+      
+      <!-- 1. Nama Pemohon -->
+      <div>
+        <label for="nama_pemohon" class="block text-sm font-medium text-gray-700 mb-1">Nama pemohon:</label>
+        <input type="text" id="nama_pemohon" required placeholder="Masukkan nama pemohon"
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm">
+      </div>
+
+      <!-- 2. Jenis Dokumen -->
+      <div>
+        <label for="jenis_dokumen" class="block text-sm font-medium text-gray-700 mb-1">Jenis Dokumen:</label>
+        <select id="jenis_dokumen" required
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm bg-white">
+          <option value="" disabled selected>-- Pilih Jenis Dokumen --</option>
+          <option value="Surat Permohonan">1. Surat Permohonan</option>
+          <option value="Surat Undangan">2. Surat Undangan</option>
+          <option value="Kerangka Acuan Kegiatan (KAK)">3. Kerangka Acuan Kegiatan (KAK)</option>
+          <option value="Notula">4. Notula</option>
+          <option value="Proposal Kegiatan">5. Proposal Kegiatan</option>
+          <option value="Laporan Pertanggungjawaban">6. Laporan Pertanggungjawaban</option>
+          <option value="Sertifikat">7. Sertifikat</option>
+        </select>
+      </div>
+
+      <!-- 3. Direktorat -->
+      <div>
+        <label for="direktorat" class="block text-sm font-medium text-gray-700 mb-1">Direktorat:</label>
+        <select id="direktorat" required
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm bg-white">
+          <option value="" disabled selected>-- Pilih Direktorat --</option>
+          <option value="BPH">1. BPH</option>
+          <option value="HUMAS">2. HUMAS</option>
+          <option value="PSDM">3. PSDM</option>
+          <option value="SPM">4. SPM</option>
+          <option value="MEDIA DAN PUBLIKASI">5. MEDIA DAN PUBLIKASI</option>
+          <option value="PENDIDIKAN">6. PENDIDIKAN</option>
+          <option value="EKRAF">7. EKRAF</option>
+        </select>
+      </div>
+
+      <!-- 4. Nama Kegiatan -->
+      <div>
+        <label for="nama_kegiatan" class="block text-sm font-medium text-gray-700 mb-1">Nama kegiatan:</label>
+        <input type="text" id="nama_kegiatan" required placeholder="Masukkan nama kegiatan"
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm">
+      </div>
+
+      <!-- 5. Nama Dokumen -->
+      <div>
+        <label for="nama_dokumen" class="block text-sm font-medium text-gray-700 mb-1">Nama Dokumen:</label>
+        <input type="text" id="nama_dokumen" required placeholder="Masukkan nama dokumen"
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm">
+      </div>
+
+      <!-- 6. Tautan Dokumen -->
+      <div>
+        <label for="tautan_dokumen" class="block text-sm font-medium text-gray-700 mb-1">Masukan tautan dokumen:</label>
+        <input type="url" id="tautan_dokumen" required placeholder="https://..."
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm">
+      </div>
+
+      <!-- 7. Tanggal Dibutuhkan -->
+      <div>
+        <label for="tgl_dibutuhkan" class="block text-sm font-medium text-gray-700 mb-1">Masukan tanggal dibutuhkan:</label>
+        <input type="date" id="tgl_dibutuhkan" required
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm">
+      </div>
+
+      <!-- Tombol Kirim -->
+      <button type="submit" id="submitBtn"
+        class="w-full mt-2 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg shadow-md hover:shadow-lg transition duration-200 text-sm">
+        Kirim Permohonan
+      </button>
+
+    </form>
+  </div>
+
+  <!-- 2. SCRIPT INTEGRASI DENGAN TELEGRAM BOT -->
+  <script>
+    // Inisialisasi Objek WebApp dari Telegram SDK
+    const tg = window.Telegram.WebApp;
+
+    // Beritahu Telegram bahwa aplikasi web siap digunakan
+    tg.ready();
+
+    // Opsional: Buat tampilan Web App menjadi layar penuh di aplikasi Telegram
+    tg.expand();
+
+    // Isi Otomatis "Nama pemohon" menggunakan Nama dari Akun Telegram User (jika ada)
+    const user = tg.initDataUnsafe?.user;
+    if (user) {
+      const fullName = [user.first_name, user.last_name].filter(Boolean).join(' ');
+      document.getElementById('nama_pemohon').value = fullName;
+    }
+
+    // Tangani Event Submit Form
+    document.getElementById('docForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      // Kumpulkan seluruh data dari formulir ke dalam satu objek JSON
+      const formData = {
+        nama_pemohon: document.getElementById('nama_pemohon').value,
+        jenis_dokumen: document.getElementById('jenis_dokumen').value,
+        direktorat: document.getElementById('direktorat').value,
+        nama_kegiatan: document.getElementById('nama_kegiatan').value,
+        nama_dokumen: document.getElementById('nama_dokumen').value,
+        tautan_dokumen: document.getElementById('tautan_dokumen').value,
+        tgl_dibutuhkan: document.getElementById('tgl_dibutuhkan').value
+      };
+
+      // 3. KIRIM DATA KE BOT TELEGRAF DAN TUTUP JENDELA WEB APP
+      tg.sendData(JSON.stringify(formData));
+    });
+  </script>
+</body>
+</html>
