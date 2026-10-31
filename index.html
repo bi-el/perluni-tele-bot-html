@@ -106,17 +106,15 @@
   </div>
 
   <!-- 2. SCRIPT INTEGRASI DENGAN TELEGRAM BOT -->
-  <script>
+<script>
     // Inisialisasi Objek WebApp dari Telegram SDK
     const tg = window.Telegram.WebApp;
 
     // Beritahu Telegram bahwa aplikasi web siap digunakan
     tg.ready();
-
-    // Opsional: Buat tampilan Web App menjadi layar penuh di aplikasi Telegram
     tg.expand();
 
-    // Isi Otomatis "Nama pemohon" menggunakan Nama dari Akun Telegram User (jika ada)
+    // Isi Otomatis "Nama pemohon" menggunakan Nama dari Akun Telegram User
     const user = tg.initDataUnsafe?.user;
     if (user) {
       const fullName = [user.first_name, user.last_name].filter(Boolean).join(' ');
@@ -127,21 +125,30 @@
     document.getElementById('docForm').addEventListener('submit', function (e) {
       e.preventDefault();
 
-      // Kumpulkan seluruh data dari formulir ke dalam satu objek JSON
-      const formData = {
-        nama_pemohon: document.getElementById('nama_pemohon').value,
-        jenis_dokumen: document.getElementById('jenis_dokumen').value,
-        direktorat: document.getElementById('direktorat').value,
-        nama_kegiatan: document.getElementById('nama_kegiatan').value,
-        nama_dokumen: document.getElementById('nama_dokumen').value,
-        tautan_dokumen: document.getElementById('tautan_dokumen').value,
-        tgl_dibutuhkan: document.getElementById('tgl_dibutuhkan').value
-      };
+      try {
+        // Ambil data dari form
+        const formData = {
+          nama_pemohon: document.getElementById('nama_pemohon').value,
+          jenis_dokumen: document.getElementById('jenis_dokumen').value,
+          direktorat: document.getElementById('direktorat').value,
+          nama_kegiatan: document.getElementById('nama_kegiatan').value,
+          nama_dokumen: document.getElementById('nama_dokumen').value,
+          tautan_dokumen: document.getElementById('tautan_dokumen').value,
+          tgl_dibutuhkan: document.getElementById('tgl_dibutuhkan').value
+        };
 
-      alert("Data berhasil dikirim: " + JSON.stringify(formData));
+        const jsonString = JSON.stringify(formData);
+        
+        // Debugging: Pastikan string JSON terbentuk
+        alert("JSON Siap Kirim: " + jsonString);
 
-      // 3. KIRIM DATA KE BOT TELEGRAF DAN TUTUP JENDELA WEB APP
-      tg.sendData(JSON.stringify(formData));
+        // KIRIM DATA KE TELEGRAM & OTOMATIS MENUTUP MINI APP
+        tg.sendData(jsonString);
+
+      } catch (error) {
+        // Jika ada error di dalam script, alert ini akan muncul
+        alert("Error tertangkap: " + error.message);
+      }
     });
   </script>
 </body>
