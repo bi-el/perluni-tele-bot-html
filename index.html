@@ -138,6 +138,8 @@
         tgl_dibutuhkan: document.getElementById('tgl_dibutuhkan').value
       };
 
+      alert("Data berhasil dikirim: " + JSON.stringify(formData));
+
       // 3. KIRIM DATA KE BOT TELEGRAF DAN TUTUP JENDELA WEB APP
       tg.sendData(JSON.stringify(formData));
     });
