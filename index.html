@@ -116,38 +116,69 @@
   </div>
 
   <script>
-    // Tell Telegram the webapp interface is ready
-    if (window.Telegram && window.Telegram.WebApp) {
-      window.Telegram.WebApp.ready();
+   // Ensure the WebApp SDK knows your page has initialized
+  if (window.Telegram && window.Telegram.WebApp) {
+    window.Telegram.WebApp.ready();
+    // Expand the mini app window to full heights automatically for better UI
+    window.Telegram.WebApp.expand();
+  }
+
+  document.getElementById('docForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    // 1. Gather form structure values
+    const formData = {
+      nama_pemohon: document.getElementById('nama_pemohon').value,
+      jenis_dokumen: document.getElementById('jenis_dokumen').value,
+      direktorat: document.getElementById('direktorat').value,
+      nama_kegiatan: document.getElementById('nama_kegiatan').value,
+      nama_dokumen: document.getElementById('nama_dokumen').value,
+      tautan_dokumen: document.getElementById('tautan_dokumen').value,
+      tgl_dibutuhkan: document.getElementById('tgl_dibutuhkan').value
+    };
+
+    // 2. Safely grab the actual Telegram User ID interacting with the app
+    let telegramUserId = null;
+    if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe?.user) {
+      telegramUserId = window.Telegram.WebApp.initDataUnsafe.user.id;
     }
 
-    document.getElementById('docForm').addEventListener('submit', function (e) {
-      e.preventDefault();
+    if (!telegramUserId) {
+      alert("Gagal: Tidak dapat membaca Identitas User Telegram Anda. Pastikan dibuka di dalam Telegram.");
+      return;
+    }
 
-      try {
-        const formData = {
-          nama_pemohon: document.getElementById('nama_pemohon').value,
-          jenis_dokumen: document.getElementById('jenis_dokumen').value,
-          direktorat: document.getElementById('direktorat').value,
-          nama_kegiatan: document.getElementById('nama_kegiatan').value,
-          nama_dokumen: document.getElementById('nama_dokumen').value,
-          tautan_dokumen: document.getElementById('tautan_dokumen').value,
-          tgl_dibutuhkan: document.getElementById('tgl_dibutuhkan').value
-        };
+    try {
+      // Disable your submit button while sending to prevent duplicate submissions
+      document.getElementById('submitBtn').disabled = true;
 
-        const jsonString = JSON.stringify(formData);
-        
-        if (window.Telegram && window.Telegram.WebApp && typeof window.Telegram.WebApp.sendData === 'function') {
-          window.Telegram.WebApp.sendData(jsonString);
-          window.Telegram.WebApp.close();
-        } else {
-          alert("Gagal: Anda membuka halaman ini di luar aplikasi Telegram!");
-        }
+      // 3. Fire the payload directly to your backend Node server endpoint via HTTP Fetch
+      // CHANGE "http://localhost:3000" to your actual backend domain (ngrok/vps) in production
+      const response = await fetch('http://localhost:3000/api/submit-form', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          userId: telegramUserId,
+          data: formData
+        })
+      });
 
-      } catch (error) {
-        alert("Error tertangkap: " + error.message);
+      const result = await response.json();
+
+      if (result.success) {
+        // 4. Cleanly shut down the webview wrapper inside Telegram on success
+        window.Telegram.WebApp.close();
+      } else {
+        alert("Gagal mengirim ke server: " + result.error);
+        document.getElementById('submitBtn').disabled = false;
       }
-    });
-  </script>
+
+    } catch (error) {
+      alert("Network Error: " + error.message);
+      document.getElementById('submitBtn').disabled = false;
+    }
+  });  </script>
 </body>
 </html>
