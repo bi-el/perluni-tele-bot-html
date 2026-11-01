@@ -17,96 +17,110 @@
       background-color: var(--tg-theme-bg-color, #f9fafb);
       color: var(--tg-theme-text-color, #111827);
     }
+    /* Style input focus borders globally to match Telegram accent color */
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--tg-theme-button-color, #3b82f6) !important;
+      box-shadow: 0 0 0 2px var(--tg-theme-button-color, #3b82f6)40 !important;
+    }
   </style>
 </head>
 <body class="min-h-screen p-4 md:p-6 flex items-center justify-center">
 
-  <div class="w-full max-w-lg bg-white rounded-2xl shadow-xl p-6 space-y-4 border border-gray-100">
-    <div class="border-b pb-3 mb-2">
-      <h2 class="text-xl font-bold text-gray-800">Formulir Permohonan Dokumen</h2>
-      <p class="text-xs text-gray-500">Isi data di bawah ini untuk mengajukan permohonan dokumen.</p>
+  <!-- Dynamic background colors based on Telegram user theme -->
+  <div class="w-full max-w-lg rounded-2xl shadow-xl p-6 space-y-4 transition-colors"
+       style="background-color: var(--tg-theme-secondary-bg-color, #ffffff); border: 1px solid var(--tg-theme-hint-color, #f3f4f6);">
+    
+    <div class="border-b pb-3 mb-2" style="border-color: var(--tg-theme-hint-color, #f3f4f6);">
+      <h2 class="text-xl font-bold">Formulir Permohonan Dokumen</h2>
+      <p class="text-xs opacity-60">Isi data di bawah ini untuk mengajukan permohonan dokumen.</p>
     </div>
 
     <form id="docForm" class="space-y-4">
       
       <!-- 1. Nama Pemohon -->
       <div>
-        <label for="nama_pemohon" class="block text-sm font-medium text-gray-700 mb-1">Nama pemohon:</label>
+        <label for="nama_pemohon" class="block text-sm font-medium mb-1">Nama pemohon:</label>
         <input type="text" id="nama_pemohon" required placeholder="Masukkan nama pemohon"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm">
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-transparent">
       </div>
 
       <!-- 2. Jenis Dokumen -->
       <div>
-        <label for="jenis_dokumen" class="block text-sm font-medium text-gray-700 mb-1">Jenis Dokumen:</label>
+        <label for="jenis_dokumen" class="block text-sm font-medium mb-1">Jenis Dokumen:</label>
         <select id="jenis_dokumen" required
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm bg-white">
-          <option value="" disabled selected>-- Pilih Jenis Dokumen --</option>
-          <option value="Surat Permohonan">1. Surat Permohonan</option>
-          <option value="Surat Undangan">2. Surat Undangan</option>
-          <option value="Kerangka Acuan Kegiatan (KAK)">3. Kerangka Acuan Kegiatan (KAK)</option>
-          <option value="Notula">4. Notula</option>
-          <option value="Proposal Kegiatan">5. Proposal Kegiatan</option>
-          <option value="Laporan Pertanggungjawaban">6. Laporan Pertanggungjawaban</option>
-          <option value="Sertifikat">7. Sertifikat</option>
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-transparent">
+          <option value="" disabled selected class="text-gray-400">-- Pilih Jenis Dokumen --</option>
+          <option value="Surat Permohonan" class="text-black">1. Surat Permohonan</option>
+          <option value="Surat Undangan" class="text-black">2. Surat Undangan</option>
+          <option value="Kerangka Acuan Kegiatan (KAK)" class="text-black">3. Kerangka Acuan Kegiatan (KAK)</option>
+          <option value="Notula" class="text-black">4. Notula</option>
+          <option value="Proposal Kegiatan" class="text-black">5. Proposal Kegiatan</option>
+          <option value="Laporan Pertanggungjawaban" class="text-black">6. Laporan Pertanggungjawaban</option>
+          <option value="Sertifikat" class="text-black">7. Sertifikat</option>
         </select>
       </div>
 
       <!-- 3. Direktorat -->
       <div>
-        <label for="direktorat" class="block text-sm font-medium text-gray-700 mb-1">Direktorat:</label>
+        <label for="direktorat" class="block text-sm font-medium mb-1">Direktorat:</label>
         <select id="direktorat" required
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm bg-white">
-          <option value="" disabled selected>-- Pilih Direktorat --</option>
-          <option value="BPH">1. BPH</option>
-          <option value="HUMAS">2. HUMAS</option>
-          <option value="PSDM">3. PSDM</option>
-          <option value="SPM">4. SPM</option>
-          <option value="MEDIA DAN PUBLIKASI">5. MEDIA DAN PUBLIKASI</option>
-          <option value="PENDIDIKAN">6. PENDIDIKAN</option>
-          <option value="EKRAF">7. EKRAF</option>
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-transparent">
+          <option value="" disabled selected class="text-gray-400">-- Pilih Direktorat --</option>
+          <option value="BPH" class="text-black">1. BPH</option>
+          <option value="HUMAS" class="text-black">2. HUMAS</option>
+          <option value="PSDM" class="text-black">3. PSDM</option>
+          <option value="SPM" class="text-black">4. SPM</option>
+          <option value="MEDIA DAN PUBLIKASI" class="text-black">5. MEDIA DAN PUBLIKASI</option>
+          <option value="PENDIDIKAN" class="text-black">6. PENDIDIKAN</option>
+          <option value="EKRAF" class="text-black">7. EKRAF</option>
         </select>
       </div>
 
       <!-- 4. Nama Kegiatan -->
       <div>
-        <label for="nama_kegiatan" class="block text-sm font-medium text-gray-700 mb-1">Nama kegiatan:</label>
+        <label for="nama_kegiatan" class="block text-sm font-medium mb-1">Nama kegiatan:</label>
         <input type="text" id="nama_kegiatan" required placeholder="Masukkan nama kegiatan"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm">
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-transparent">
       </div>
 
       <!-- 5. Nama Dokumen -->
       <div>
-        <label for="nama_dokumen" class="block text-sm font-medium text-gray-700 mb-1">Nama Dokumen:</label>
+        <label for="nama_dokumen" class="block text-sm font-medium mb-1">Nama Dokumen:</label>
         <input type="text" id="nama_dokumen" required placeholder="Masukkan nama dokumen"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm">
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-transparent">
       </div>
 
       <!-- 6. Tautan Dokumen -->
       <div>
-        <label for="tautan_dokumen" class="block text-sm font-medium text-gray-700 mb-1">Masukan tautan dokumen:</label>
+        <label for="tautan_dokumen" class="block text-sm font-medium mb-1">Masukan tautan dokumen:</label>
         <input type="url" id="tautan_dokumen" required placeholder="https://..."
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm">
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-transparent">
       </div>
 
       <!-- 7. Tanggal Dibutuhkan -->
       <div>
-        <label for="tgl_dibutuhkan" class="block text-sm font-medium text-gray-700 mb-1">Masukan tanggal dibutuhkan:</label>
+        <label for="tgl_dibutuhkan" class="block text-sm font-medium mb-1">Masukan tanggal dibutuhkan:</label>
         <input type="date" id="tgl_dibutuhkan" required
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm">
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-transparent">
       </div>
 
       <!-- Tombol Kirim -->
       <button type="submit" id="submitBtn"
-        class="w-full mt-2 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg shadow-md hover:shadow-lg transition duration-200 text-sm">
+        class="w-full mt-2 font-medium py-2.5 rounded-lg shadow-md transition duration-200 text-sm text-white"
+        style="background-color: var(--tg-theme-button-color, #2563eb);">
         Kirim Permohonan
       </button>
 
     </form>
   </div>
 
-  <!-- 2. SCRIPT INTEGRASI DENGAN TELEGRAM BOT -->
   <script>
+    // Tell Telegram the webapp interface is ready
+    if (window.Telegram && window.Telegram.WebApp) {
+      window.Telegram.WebApp.ready();
+    }
+
     document.getElementById('docForm').addEventListener('submit', function (e) {
       e.preventDefault();
 
@@ -123,12 +137,8 @@
 
         const jsonString = JSON.stringify(formData);
         
-        // Cek apakah objek Telegram WebApp benar-benar terdeteksi
         if (window.Telegram && window.Telegram.WebApp && typeof window.Telegram.WebApp.sendData === 'function') {
-          // Kirim data ke bot
           window.Telegram.WebApp.sendData(jsonString);
-          
-          // Paksa tutup jendela setelah data terkirim
           window.Telegram.WebApp.close();
         } else {
           alert("Gagal: Anda membuka halaman ini di luar aplikasi Telegram!");
