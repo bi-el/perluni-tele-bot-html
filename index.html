@@ -106,27 +106,11 @@
   </div>
 
   <!-- 2. SCRIPT INTEGRASI DENGAN TELEGRAM BOT -->
-<script>
-    // Inisialisasi Objek WebApp dari Telegram SDK
-    const tg = window.Telegram.WebApp;
-
-    // Beritahu Telegram bahwa aplikasi web siap digunakan
-    tg.ready();
-    tg.expand();
-
-    // Isi Otomatis "Nama pemohon" menggunakan Nama dari Akun Telegram User
-    const user = tg.initDataUnsafe?.user;
-    if (user) {
-      const fullName = [user.first_name, user.last_name].filter(Boolean).join(' ');
-      document.getElementById('nama_pemohon').value = fullName;
-    }
-
-    // Tangani Event Submit Form
+  <script>
     document.getElementById('docForm').addEventListener('submit', function (e) {
       e.preventDefault();
 
       try {
-        // Ambil data dari form
         const formData = {
           nama_pemohon: document.getElementById('nama_pemohon').value,
           jenis_dokumen: document.getElementById('jenis_dokumen').value,
@@ -139,14 +123,18 @@
 
         const jsonString = JSON.stringify(formData);
         
-        // Debugging: Pastikan string JSON terbentuk
-        alert("JSON Siap Kirim: " + jsonString);
-
-        // KIRIM DATA KE TELEGRAM & OTOMATIS MENUTUP MINI APP
-        tg.sendData(jsonString);
+        // Cek apakah objek Telegram WebApp benar-benar terdeteksi
+        if (window.Telegram && window.Telegram.WebApp && typeof window.Telegram.WebApp.sendData === 'function') {
+          // Kirim data ke bot
+          window.Telegram.WebApp.sendData(jsonString);
+          
+          // Paksa tutup jendela setelah data terkirim
+          window.Telegram.WebApp.close();
+        } else {
+          alert("Gagal: Anda membuka halaman ini di luar aplikasi Telegram!");
+        }
 
       } catch (error) {
-        // Jika ada error di dalam script, alert ini akan muncul
         alert("Error tertangkap: " + error.message);
       }
     });
